@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Baudson's Vault</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: white;
+    }
+
+    /* Barra carmesim */
+    .navbar {
+      background-color: #8b0000;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 2em;
+    }
+
+    .menu {
+      display: flex;
+      gap: 20px;
+    }
+
+    .menu button {
+      background-color: transparent;
+      border: 2px solid white;
+      color: white;
+      padding: 8px 16px;
+      font-size: 1em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s ease-in-out;
+    }
+
+    .menu button:hover {
+      background-color: white;
+      color: #8b0000;
+    }
+
+    .section {
+      display: none;
+      padding: 30px;
+    }
+
+    #busca {
+      margin-bottom: 20px;
+      padding: 10px;
+      width: 60%;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      color: black;
+    }
+
+    .livro-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .livro-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding-bottom: 20px;
+      border-bottom: 1px solid white;
+      cursor: pointer;
+    }
+
+    .livro-item img {
+      width: 120px;
+      height: 180px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .livro-info {
+      text-align: left;
+    }
+
+    .livro-info h2 {
+      margin: 0 0 10px;
+      font-size: 1.5em;
+      color: white;
+    }
+
+    .livro-info p {
+      margin: 0;
+      color: #ddd;
+    }
+
+    /* Modal do leitor */
+    #modalLeitor {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #modalConteudo {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      text-align: center;
+      color: black;
+    }
+
+    #modalConteudo img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    #fechar,
+    #proximo {
+      margin-top: 10px;
+      cursor: pointer;
+      color: #8b0000;
+      text-decoration: underline;
+      display: inline-block;
+    }
+
+    .ilustracoes {
+      text-align: center;
+    }
+
+    .ilustracoes img {
+      width: 200px;
+      height: auto;
+      margin: 10px;
+      border: 2px solid #fff;
+      border-radius: 6px;
+    }
+
+    /* PERSONAGENS */
+    .personagem-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .personagem-item {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      border-bottom: 1px solid white;
+      padding-bottom: 20px;
+    }
+
+    .personagem-item img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .personagem-info h2 {
+      margin: 0;
+      font-size: 1.4em;
+      color: white;
+    }
+
+    .personagem-info p {
+      margin: 8px 0 0;
+      color: #ccc;
+    }
+
+    /* COMICS */
+    .comics-section img {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 6px;
+    }
+
+    .comic-item {
+      border-bottom: 1px solid white;
+      padding-bottom: 30px;
+      margin-bottom: 30px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h1>Baudson's Vault</h1>
+    <div class="menu">
+      <button onclick="mostrarSecao('secaoHQs')">HQs</button>
+      <button onclick="mostrarSecao('secaoIlustracoes')">Ilustrações</button>
+      <button onclick="mostrarSecao('secaoPersonagens')">Personagens</button>
+      <button onclick="mostrarSecao('secaoComics')">Comics</button>
+    </div>
+  </div>
+
+  <!-- HQs -->
+  <div id="secaoHQs" class="section">
+    <input type="text" id="busca" placeholder="Buscar HQ por nome..." onkeyup="filtrarHQs()" />
+
+    <div class="livro-lista" id="listaHQs">
+      <!-- 7 HQs -->
+      <div class="livro-item" data-nome="Livro 1" onclick="abrirLivro('livro1', 'images/capa1.png', 1)">
+        <img src="images/capa1.png" alt="Capa do Livro 1" />
+        <div class="livro-info"><h2>Livro 1</h2><p>Insira resumo aqui</p></div>
+      </div>
+      <div class="livro-item" data-nome="Livro 2" onclick="abrirLivro('livro2', 'images/capa2.png', 1)">
+        <img src="images/capa2.png" alt="Capa do Livro 2" />
+        <div class="livro-info"><h2>Livro 2</h2><p>Insira resumo aqui</p></div>
+      </div>
+      <div class="livro-item" data-nome="Livro 3" onclick="abrirLivro('livro3', 'images/capa3.png', 1)">
+        <img src="images/capa3.png" alt="Capa do Livro 3" />
+        <div class="livro-info"><h2>Livro 3</h2><p>Insira resumo aqui</p></div>
+      </div>
+      <div class="livro-item" data-nome="Livro 4" onclick="abrirLivro('livro4', 'images/capa4.png', 1)">
+        <img src="images/capa4.png" alt="Capa do Livro 4" />
+        <div class="livro-info"><h2>Livro 4</h2><p>Insira resumo aqui</p></div>
+      </div>
+      <div class="livro-item" data-nome="Livro 5" onclick="abrirLivro('livro5', 'images/capa5.png', 1)">
+        <img src="images/capa5.png" alt="Capa do Livro 5" />
+        <div class="livro-info"><h2>Livro 5</h2><p>Insira resumo aqui</p></div>
+      </div>
+      <div class="livro-item" data-nome="Livro 6" onclick="abrirLivro('livro6', 'images/capa6.png', 1)">
+        <img src="images/capa6.png" alt="Capa do Livro 6" />
+        <div class="livro-info"><h2>Livro 6</h2><p>Insira resumo aqui</p></div>
+      </div>
+      <div class="livro-item" data-nome="Livro 7" onclick="abrirLivro('livro7', 'images/capa7.png', 1)">
+        <img src="images/capa7.png" alt="Capa do Livro 7" />
+        <div class="livro-info"><h2>Livro 7</h2><p>Insira resumo aqui</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ilustrações -->
+  <div id="secaoIlustracoes" class="section ilustracoes">
+    <img src="images/ilustra1.png" alt="Ilustração 1" />
+    <img src="images/ilustra2.png" alt="Ilustração 2" />
+    <img src="images/ilustra3.png" alt="Ilustração 3" />
+  </div>
+
+  <!-- Personagens -->
+  <div id="secaoPersonagens" class="section">
+  <div class="personagem-lista">
+    <div class="personagem-item">
+      <img src="images/personagem1.png" alt="Personagem 1" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem2.png" alt="Personagem 2" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem3.png" alt="Personagem 3" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem4.png" alt="Personagem 4" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem5.png" alt="Personagem 5" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem6.png" alt="Personagem 6" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem7.png" alt="Personagem 7" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem8.png" alt="Personagem 8" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem9.png" alt="Personagem 9" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+    <div class="personagem-item">
+      <img src="images/personagem10.png" alt="Personagem 10" />
+      <div class="personagem-info">
+        <h2>Insira nome aqui</h2>
+        <p>Insira lore aqui</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Comics -->
+  <div id="secaoComics" class="section comics-section">
+    <h2 style="text-align: center;">Comics</h2>
+    <div class="comic-item"><img src="images/comic1.png" alt="Comic 1"></div>
+    <div class="comic-item"><img src="images/comic2.png" alt="Comic 2"></div>
+    <div class="comic-item"><img src="images/comic3.png" alt="Comic 3"></div>
+    <div class="comic-item"><img src="images/comic4.png" alt="Comic 4"></div>
+    <div class="comic-item"><img src="images/comic5.png" alt="Comic 5"></div>
+  </div>
+
+  <!-- Modal do leitor -->
+  <div id="modalLeitor" onclick="fecharLivro(event)">
+    <div id="modalConteudo" onclick="event.stopPropagation()">
+      <div id="conteudoLivro"></div>
+      <div id="proximo" onclick="proximoCapitulo()">➡️ Próximo capítulo</div>
+      <div id="fechar" onclick="fecharLivro()">Fechar HQ</div>
+    </div>
+  </div>
+
+  <script>
+    let livroAtual = '';
+    let capaAtual = '';
+    let capituloAtual = 1;
+
+    function mostrarSecao(id) {
+      document.querySelectorAll('.section').forEach(secao => {
+        secao.style.display = 'none';
+      });
+      document.getElementById(id).style.display = 'block';
+    }
+
+    function abrirLivro(nomeLivro, capa, capitulo) {
+      livroAtual = nomeLivro;
+      capaAtual = capa;
+      capituloAtual = capitulo;
+      atualizarImagem();
+      document.getElementById('modalLeitor').style.display = 'flex';
+      document.getElementById('modalConteudo').scrollTop = 0;
+    }
+
+    function atualizarImagem() {
+      const conteudo = document.getElementById('conteudoLivro');
+      conteudo.innerHTML = '';
+      const capaImg = document.createElement('img');
+      capaImg.src = capaAtual;
+      capaImg.alt = 'Capa da HQ';
+      conteudo.appendChild(capaImg);
+      const capituloImg = document.createElement('img');
+      capituloImg.src = `images/${livroAtual}-cap${capituloAtual}.png`;
+      capituloImg.alt = `Capítulo ${capituloAtual}`;
+      conteudo.appendChild(capituloImg);
+    }
+
+    function proximoCapitulo() {
+      capituloAtual++;
+      atualizarImagem();
+      document.getElementById('modalConteudo').scrollTop = 0;
+    }
+
+    function fecharLivro(event) {
+      if(event && event.target.id !== 'modalLeitor' && event.target.id !== 'fechar') return;
+      document.getElementById('modalLeitor').style.display = 'none';
+      document.getElementById('conteudoLivro').innerHTML = '';
+      capituloAtual = 1;
+      livroAtual = '';
+      capaAtual = '';
+    }
+
+    function filtrarHQs() {
+      const filtro = document.getElementById('busca').value.toLowerCase();
+      const hqs = document.querySelectorAll('.livro-item');
+      hqs.forEach(hq => {
+        const nome = hq.getAttribute('data-nome').toLowerCase();
+        hq.style.display = nome.includes(filtro) ? 'flex' : 'none';
+      });
+    }
+
+    window.onload = () => {
+      mostrarSecao('secaoHQs');
+    }
+  </script>
+
+</body>
+</html>
